@@ -11,12 +11,11 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
-
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+        NSApplication.shared.windows.first!.setTitleWithRepresentedFilename("Battery Notifier")
+        NSUserNotificationCenter.default.delegate = self
     }
-
+    
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
@@ -120,3 +119,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 }
 
+extension AppDelegate: NSUserNotificationCenterDelegate {
+    
+    func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
+        return true
+    }
+    
+    func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
+        switch notification.activationType {
+        case .actionButtonClicked:
+            Status.shared.didRespondToNotification = true
+            Status.shared.notificationIsActive = false
+        default:
+            break
+        }
+    }
+    
+}
